@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Легенды подземелий — карточки персонажей</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=PT+Sans+Narrow:wght@400;700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+/* ==================================================================
+   ЛЕГЕНДЫ ПОДЗЕМЕЛИЙ · игровые карточки
+   Один <section class="card"> — один самостоятельный лист A4.
+   Порядок чтения задан номерами 1 → 2 → 3 и подписями под ними.
+   ================================================================== */
+:root{
+  --paper:#efe9dd;
+  --paper-edge:#ded4c1;
+  --ink:#17181a;
+  --ink-soft:#5c5a54;
+  --teal:#17454a;
+  --teal-deep:#0d2b30;
+  --brass:#b08a3e;
+  --brass-deep:#8a6a26;
+  --blood:#7d1f16;
+
+  --display:"Oswald","PT Sans Narrow","Arial Narrow",sans-serif;
+  --body:"PT Serif",Georgia,"Times New Roman",serif;
+  --util:"PT Sans Narrow","Arial Narrow",sans-serif;
+}
+*{box-sizing:border-box;}
+html{background:#3a3833;}
+body{margin:0;font-family:var(--body);color:var(--ink);font-size:10pt;line-height:1.34;}
+
+/* ---------- служебная панель, не печатается ---------- */
+.howto{
+  max-width:210mm;margin:24px auto;padding:18px 22px;
+  background:#22201c;color:#d8d2c4;font-family:var(--util);
+  font-size:13px;line-height:1.55;border-left:4px solid var(--brass);
+}
+.howto h2{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;
+  font-size:15px;margin:0 0 10px;color:var(--brass);}
+.howto ul{margin:8px 0 0 18px;padding:0;}
+.howto li{margin-bottom:5px;}
+.howto code{background:#33302a;padding:1px 5px;color:#efe9dd;}
+
+/* ---------- лист ---------- */
+.card{
+  position:relative;
+  width:210mm;min-height:297mm;
+  margin:20px auto;
+  padding:12mm 13mm 10mm;
+  background:var(--paper);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.05'/></svg>");
+  box-shadow:0 10px 34px rgba(0,0,0,.5);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+
+/* ---------- шапка ---------- */
+.runhead{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--util);text-transform:uppercase;letter-spacing:.14em;
+  font-size:8pt;color:var(--brass-deep);
+  border-bottom:1px solid var(--paper-edge);padding-bottom:2mm;margin-bottom:4mm;
+}
+
+.head{display:flex;align-items:flex-start;gap:6mm;margin-bottom:5mm;}
+.head .titles{flex:1;}
+.head .eyebrow{
+  font-family:var(--util);text-transform:uppercase;letter-spacing:.2em;
+  font-size:9pt;color:var(--brass-deep);display:block;margin-bottom:1mm;
+}
+.head h1{
+  font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:31pt;line-height:.95;letter-spacing:.005em;color:var(--teal);margin:0;
+}
+.head .role{
+  font-family:var(--body);font-style:italic;font-size:11pt;color:var(--ink-soft);
+  margin:2mm 0 0;
+}
+/* значок здоровья */
+.hpbox{
+  flex:0 0 30mm;text-align:center;padding:2.5mm 1mm 2mm;
+  background:var(--teal-deep);color:#fff;border:1px solid var(--brass);
+}
+.hpbox .lab{
+  display:block;font-family:var(--util);text-transform:uppercase;
+  letter-spacing:.14em;font-size:7.5pt;color:var(--brass);margin-bottom:.5mm;
+}
+.hpbox .num{font-family:var(--display);font-weight:700;font-size:30pt;line-height:1;}
+
+/* ---------- числа ---------- */
+.numsblock{margin-bottom:5mm;}
+.numsblock .cap{
+  font-family:var(--util);text-transform:uppercase;letter-spacing:.12em;
+  font-size:8pt;color:var(--teal);margin-bottom:1.5mm;
+}
+.numsblock .cap b{color:var(--blood);font-weight:700;}
+.nums{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--teal);}
+.nums div{
+  padding:2mm 1mm 2.5mm;text-align:center;border-right:1px solid var(--paper-edge);
+}
+.nums div:last-child{border-right:0;}
+.nums .lab{
+  display:block;font-family:var(--util);text-transform:uppercase;
+  letter-spacing:.06em;font-size:7.5pt;color:var(--teal);margin-bottom:.8mm;
+}
+.nums .val{font-family:var(--display);font-weight:600;font-size:20pt;line-height:1;}
+.nums .val.neg{color:var(--blood);}
+
+.gear{display:flex;gap:4mm;margin-top:3mm;}
+.gear div{
+  flex:1;border:1px solid var(--paper-edge);background:rgba(23,69,74,.05);
+  padding:2mm 3mm;min-height:11mm;
+}
+.gear .lab{
+  display:block;font-family:var(--util);text-transform:uppercase;
+  letter-spacing:.1em;font-size:7.5pt;color:var(--teal);margin-bottom:.8mm;
+}
+.gear .txt{font-family:var(--body);font-size:10pt;}
+.gear .txt.empty::after{
+  content:"";display:block;border-bottom:1px dotted #a8a294;margin-top:3mm;
+}
+
+/* ---------- нумерованные разделы ---------- */
+.snum{display:flex;align-items:baseline;gap:3mm;margin:0 0 3mm;}
+.snum .n{
+  font-family:var(--display);font-weight:700;font-size:20pt;line-height:.9;
+  color:var(--brass);flex:0 0 auto;
+}
+.snum .t{flex:1;}
+.snum h2{
+  font-family:var(--display);font-weight:600;text-transform:uppercase;
+  font-size:13pt;letter-spacing:.05em;color:var(--teal);margin:0;line-height:1.1;
+  border-bottom:2px solid var(--teal);padding-bottom:1.5mm;
+}
+.snum .sub{
+  display:block;font-family:var(--util);font-size:8.5pt;color:var(--ink-soft);
+  margin-top:1.2mm;letter-spacing:.02em;
+}
+
+/* ---------- тело: две колонки ---------- */
+.body2{display:flex;gap:7mm;flex:1;}
+.body2 > div{flex:1;min-width:0;}
+
+/* ---------- черта / выбор ---------- */
+.pick{
+  margin:0 0 4mm;padding:2.5mm 3.5mm;
+  background:rgba(176,138,62,.10);border-left:3px solid var(--brass);
+}
+.pick h3{
+  font-family:var(--display);font-weight:600;text-transform:uppercase;
+  letter-spacing:.03em;font-size:11pt;color:var(--teal);margin:0 0 1.2mm;
+}
+.pick p{margin:0 0 1.5mm;}
+.pick p:last-child{margin-bottom:0;}
+.pick .price{
+  display:block;font-family:var(--util);font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;font-size:8.5pt;color:var(--blood);
+}
+.pick .test{
+  display:block;font-family:var(--util);font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;font-size:8.5pt;color:var(--teal);
+}
+.intro{margin:0 0 4mm;font-size:10pt;}
+
+/* ---------- способность ---------- */
+.abil{margin:0 0 4.5mm;}
+.abil .row{display:flex;align-items:center;gap:2mm;flex-wrap:wrap;margin-bottom:1.2mm;}
+.abil h3{
+  font-family:var(--display);font-weight:600;text-transform:uppercase;
+  letter-spacing:.02em;font-size:12.5pt;color:var(--ink);margin:0;line-height:1.1;
+  width:100%;
+}
+.abil p{margin:0 0 1.5mm;}
+.abil p:last-child{margin-bottom:0;}
+
+/* плашка слота */
+.slot{
+  font-family:var(--util);font-weight:700;text-transform:uppercase;
+  letter-spacing:.12em;font-size:7.5pt;padding:.8mm 2.2mm;
+  background:var(--teal);color:var(--paper);white-space:nowrap;
+}
+.slot.bonus{background:var(--brass);color:#241c10;}
+.slot.react{background:var(--blood);color:var(--paper);}
+.slot.pass{background:transparent;color:var(--ink-soft);border:1px solid var(--ink-soft);}
+
+/* заряды-галочки */
+.uses{
+  font-family:var(--util);text-transform:uppercase;letter-spacing:.08em;
+  font-size:8pt;color:var(--teal);white-space:nowrap;
+}
+.uses i{
+  display:inline-block;width:3.4mm;height:3.4mm;
+  border:1.4px solid var(--teal);margin-right:.8mm;vertical-align:-.4mm;
+}
+.uses.none{color:var(--ink-soft);font-style:normal;}
+
+/* ---------- ультимейт ---------- */
+.ult{
+  margin-top:5mm;padding:5mm 7mm 4.5mm;position:relative;
+  background:var(--teal-deep);color:#e9e3d5;border:1px solid var(--brass);
+}
+.ult::before,.ult::after{
+  content:"";position:absolute;width:9px;height:9px;border:2px solid var(--brass);
+}
+.ult::before{left:3px;top:3px;border-right:0;border-bottom:0;}
+.ult::after{right:3px;bottom:3px;border-left:0;border-top:0;}
+.ult .top{
+  display:flex;justify-content:space-between;align-items:baseline;
+  gap:4mm;margin-bottom:2.5mm;
+}
+.ult .kick{
+  font-family:var(--util);text-transform:uppercase;letter-spacing:.22em;
+  font-size:8pt;color:var(--brass);
+}
+.ult h3{
+  font-family:var(--display);font-weight:600;text-transform:uppercase;
+  font-size:16pt;letter-spacing:.03em;color:#fff;margin:.5mm 0 0;line-height:1;
+}
+.ult .price{
+  flex:0 0 auto;font-family:var(--util);font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;font-size:9pt;color:var(--brass);
+  border:1px solid var(--brass);padding:1.2mm 3mm;white-space:nowrap;
+}
+.ult p{margin:0;font-size:10pt;}
+
+/* ---------- шпаргалка внизу ---------- */
+.cheat{
+  margin-top:5mm;display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;border-top:2px solid var(--teal);
+}
+.cheat div{
+  padding:2.5mm 3mm 0;border-right:1px solid var(--paper-edge);
+}
+.cheat div:last-child{border-right:0;}
+.cheat h4{
+  font-family:var(--util);font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;font-size:7.5pt;color:var(--teal);margin:0 0 1.2mm;
+}
+.cheat p{font-size:8.5pt;line-height:1.28;margin:0;color:#3b3a36;}
+
+/* ---------- печать ---------- */
+@page{size:A4;margin:0;}
+@media print{
+  html{background:#fff;}
+  .howto{display:none;}
+  .card{margin:0;box-shadow:none;page-break-after:always;}
+  .card:last-child{page-break-after:auto;}
+}
+@media screen and (max-width:820px){
+  .card{width:100%;min-height:auto;padding:16px;}
+  .body2{flex-direction:column;}
+  .nums{grid-template-columns:repeat(3,1fr);}
+  .cheat{grid-template-columns:1fr 1fr;}
+  .head{flex-direction:column;}
+  .hpbox{flex:0 0 auto;align-self:flex-start;min-width:30mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="howto">
+  <h2>Как этим пользоваться</h2>
+  <ul>
+    <li>Печать в PDF: <code>Ctrl/Cmd + P</code>, поля «нет», фоновая графика включена. Один <code>&lt;section class="card"&gt;</code> — одна страница A4, один персонаж. Карточку можно печатать отдельно от остальных: всё нужное на ней есть.</li>
+    <li>Порядок чтения задан номерами: <b>1</b> — что выбрать до боя, <b>2</b> — что делать в бою, <b>3</b> — ультимейт. Внизу шпаргалка по общим правилам.</li>
+    <li>Плашки слотов: бирюза — действие, латунь — бонусное действие, кровь — реакция, контур — пассивно, работает само.</li>
+    <li>Квадратики рядом с названием — заряды. Игрок зачёркивает их по ходу боя карандашом.</li>
+    <li>Текст способностей перенесён из <code>Персонажи.docx</code> дословно.</li>
+  </ul>
+</div>
+
+
+<!-- ============================ I. ГВАРДЕЕЦ ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка I из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Гвардеец</span>
+      <h1>Имперский<br>гвардеец</h1>
+      <p class="role">Солдат. Стреляет из чего угодно и раздаёт союзникам лишние действия.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">20</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val">+1</span></div>
+      <div><span class="lab">Ловкость</span><span class="val">+1</span></div>
+      <div><span class="lab">Стойкость</span><span class="val neg">&minus;1</span></div>
+      <div><span class="lab">Интеллект</span><span class="val">+1</span></div>
+      <div><span class="lab">Мудрость</span><span class="val">+2</span></div>
+      <div><span class="lab">Харизма</span><span class="val">+0</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt">Флак на старте</span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Тактика боя</h2>
+        <span class="sub">Выбери один бонус до броска инициативы. В новом бою можно взять другой.</span></span></div>
+
+      <p class="intro">Годы службы и тренировок научили вас обращаться с любым оружием! Вы получаете пасивно бонус к любому оружию которым вооружены. Бонус выбирается до броска инициативы в бою. Менять бонус можно в каждом новом бою.</p>
+
+      <div class="pick"><h3>Меткий</h3>
+        <p>Вы никогда не раните своими атаками союзников, по любой причине.</p></div>
+
+      <div class="pick"><h3>Бесстрашный</h3>
+        <p>Вы не получаете помеху при стрельбе в базовом контакте с врагом.</p></div>
+
+      <div class="pick"><h3>Умелый</h3>
+        <p>При перегреве оружия вы не получаете урон от крит-провала.</p></div>
+
+      <div class="pick"><h3>Смертоносный</h3>
+        <p>Враг бросает спас броски от взрыва с помехой.</p></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Молот Императора</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses none">без ограничений</span></div>
+        <p>Если вы атакуете цель, уже получившую атаку в этом раунде, вы можете перебросить кубики урона. Все союзники, атакующие эту цель после вас, также могут перебросить кубики урона.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Эксперт в насилии</h3>
+        <div class="row"><span class="slot react">Реакция</span><span class="uses"><i></i>1 раз в бой</span></div>
+        <p>Вы можете заявить на одном броске атаки чистую 20ку!</p>
+      </div>
+
+      <div class="abil">
+        <h3>Тактический взор</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i><i></i>2 раза за бой</span></div>
+        <p>Пройдите Тест Мудрости (СЛ 12). При успехе один союзник в пределах вашей линии видимости получает дополнительное действие.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>Император хранит</h3></div>
+      <span class="price">2 монеты</span>
+    </div>
+    <p>Когда персонаж должен потерять последнее здоровье, потратьте 2 монеты и вы остаетесь в сознании с 1 пунктом здоровья.</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Преимущество и помеха</h4><p>Преимущество — два d20, берёшь больший. Помеха — берёшь меньший.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Монеты тратятся на ультимейт.</p></div>
+  </div>
+</section>
+
+
+<!-- ============================ II. ЕРЕТИК ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка II из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Еретик</span>
+      <h1>Кающийся<br>еретик</h1>
+      <p class="role">Самый живучий в отряде. Копит порчу команды и растёт вместе с ней.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">40</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val">+0</span></div>
+      <div><span class="lab">Ловкость</span><span class="val">+1</span></div>
+      <div><span class="lab">Стойкость</span><span class="val">+1</span></div>
+      <div><span class="lab">Интеллект</span><span class="val">+0</span></div>
+      <div><span class="lab">Мудрость</span><span class="val">+0</span></div>
+      <div><span class="lab">Харизма</span><span class="val">+2</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt">Робы</span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Пакты</h2>
+        <span class="sub">Один пакт выбирается в начале игры и держится, пока не заменишь другим.</span></span></div>
+
+      <div class="pick"><h3>Пакт гордыни</h3>
+        <p>Вы получаете +1 ко всем характеристикам. Если у команды есть хотя бы 1 очко порчи, все Тесты (проверки) Харизмы совершаются с преимуществом.</p>
+        <span class="price">Цена: гордыня по отношению к другим</span></div>
+
+      <div class="pick"><h3>Пакт вечности</h3>
+        <p>Вы можете потратить 1 монету, чтобы уменьшить получаемый вами урон вдвое. Если у команды есть хотя бы 1 очко порчи, все Тесты Стойкости совершаются с преимуществом.</p>
+        <span class="price">Цена: меланхолия по отношению к другим</span></div>
+
+      <div class="pick"><h3>Пакт силы</h3>
+        <p>Вы удваиваете свою Силу и получает +2 к Силе. Если у команды есть хотя бы 1 очко порчи, все Тесты Силы совершаются с преимуществом.</p>
+        <span class="price">Цена: агрессия по отношению к другим</span></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Дары тьмы</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i><i></i>2 раза за бой</span></div>
+        <p>Вы можете добавить команде 1 очко порчи. Пассивно получаете +1 ко всем характеристикам за каждое очко порчи команды.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Тёмный пакт</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i>1 раз в день</span></div>
+        <p>Вы выбираете один пакт из списка в начале игры не тратя способность. Этот пакт действует, пока не будет заменён другим.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Оно не даст умереть…</h3>
+        <div class="row"><span class="slot react">Реакция</span><span class="uses none">без ограничений</span></div>
+        <p>Когда вы должны пасть, вы может немедленно совершить ответную атаку. Если этой атакой вы убиваете противника, то не теряете здоровье и вместо этого восстанавливает 10 единиц здоровья. При успехе Команда получает 1 единицу порчи.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>Апофеоз</h3></div>
+      <span class="price">3 монеты</span>
+    </div>
+    <p>Вы выпускаете своё демоническое нутро! Вы можете совершить 4 атаки когтями, при этом ваше перемещение не ограничено! Вы обязаны атаковать ближайшее существо пока не закончатся атаки. Все очки порчи команды сбрасываются в конце апофеоза.</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Преимущество и помеха</h4><p>Преимущество — два d20, берёшь больший. Помеха — берёшь меньший.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Тебе порча выгодна, остальным нет.</p></div>
+  </div>
+</section>
+
+
+<!-- ============================ III. КУЛЬТИСТ ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка III из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Культист смерти</span>
+      <h1>Фанатик<br>смерти</h1>
+      <p class="role">Быстрый убийца. Заливает пол кровью, бьёт ловкостью и уходит от урона.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">20</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val">+0</span></div>
+      <div><span class="lab">Ловкость</span><span class="val">+4</span></div>
+      <div><span class="lab">Стойкость</span><span class="val">+0</span></div>
+      <div><span class="lab">Интеллект</span><span class="val">+1</span></div>
+      <div><span class="lab">Мудрость</span><span class="val">+2</span></div>
+      <div><span class="lab">Харизма</span><span class="val neg">&minus;3</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt">Синтекостюм</span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Знамение его</h2>
+        <span class="sub">Выполнил условие — знамение работает до конца боя.</span></span></div>
+
+      <p class="intro">Вы верны обетам вашего культа! Он питает вас знамениями что посылает бог император. Выполняя условия вы получаете знамение до конца боя.</p>
+
+      <div class="pick"><h3>Гордость ведёт к погибели</h3>
+        <p>Критический успех противника перезаряжает одну вашу способность.</p></div>
+
+      <div class="pick"><h3>Смерть есть искупление</h3>
+        <p>Пав вы можете потратить монету для получения одного успеха на тесте против смерти.</p></div>
+
+      <div class="pick"><h3>Кровь мученика, его оружие</h3>
+        <p>Как только враг погибает в токене крови вы можете переместиться не провоцируя атак по возможности.</p></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Каровавый след</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i><i></i>2 раза в бой</span></div>
+        <p>Вы при следующей атаке создаете зону крови под врагом. Все враги в зоне получают дополнительно 5 урона от каждой атаки по нему! А союзники на 5 урона меньше!</p>
+      </div>
+
+      <div class="abil">
+        <h3>Смертельное выступление</h3>
+        <div class="row"><span class="slot react">Реакция</span><span class="uses"><i></i><i></i>2 раза за бой</span></div>
+        <p>Выбрать вас в качестве цели было роковой ошибкой. Избегите урона от любой атаки или способности, которую можете видеть.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Грация смерти</h3>
+        <div class="row"><span class="slot pass">Пассивно</span><span class="uses none">работает всегда</span></div>
+        <p>Совершая атаки вы всегда добавляете свою ловкость к урону!</p>
+      </div>
+
+      <div class="abil">
+        <h3>Смертельный пируэт</h3>
+        <div class="row"><span class="slot react">Реакция</span><span class="uses"><i></i><i></i>2 раза в бой</span></div>
+        <p>Использовав эту способность, вы прибавляете удвоенную ловкость к урону!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>Пляска смерти</h3></div>
+      <span class="price">4 монеты</span>
+    </div>
+    <p>Активировав эту способность, вы можете атаковать и бонусным действием в течении хода. Если после любой атаки цель вашей атаки погибает, вы немедленно восстанавливаете действие и бонусное действие.</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Реакция</h4><p>Срабатывает вне своего хода, по описанному условию.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Монеты тратятся на ультимейт.</p></div>
+  </div>
+</section>
+
+
+<!-- ============================ IV. ТЕХНО-ЖРЕЦ ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка IV из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Техно-жрец</span>
+      <h1>Техно-жрец</h1>
+      <p class="role">Мастеровой и медик. Улучшает снаряжение, латает себя, поднимает павших.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">30</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val">+1</span></div>
+      <div><span class="lab">Ловкость</span><span class="val neg">&minus;2</span></div>
+      <div><span class="lab">Стойкость</span><span class="val">+1</span></div>
+      <div><span class="lab">Интеллект</span><span class="val">+4</span></div>
+      <div><span class="lab">Мудрость</span><span class="val">+2</span></div>
+      <div><span class="lab">Харизма</span><span class="val neg">&minus;2</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt">Серво броня</span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Милость духов машин</h2>
+        <span class="sub">Один предмет в день. Выбери, какой именно, и посмотри, что он даст.</span></span></div>
+
+      <p class="intro">Вы умеете общаться с духами машин абсолютно любых механизмов. Прося их о милости вы можете улучшать свои предметы, или предметы союзников. Вы можете улучшить 1 предмет. <b>(1 раз в день)</b></p>
+
+      <div class="pick"><h3>Стимм</h3>
+        <p>Добавляет не +2 к броску, а ваш интеллект. (стимм это не сама аптечка)</p></div>
+
+      <div class="pick"><h3>Стрелковое оружие</h3>
+        <p>Позволяет бонусным действием прицелиться и получить +ваш интеллект к броску атаки.</p></div>
+
+      <div class="pick"><h3>Рукопашное оружие</h3>
+        <p>Позволяет использовать реакцию что бы увеличить свой класс брони на ваш интеллект.</p></div>
+
+      <div class="pick"><h3>Броня</h3>
+        <p>Один раз в бой игнорирует успешную атаку врага не являющуюся психо-силой.</p></div>
+
+      <div class="pick"><h3>Силовые поля</h3>
+        <p>Отражает урон обратно в противника при использовании силового поля.</p></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Адепт логики</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i>1 раз за бой</span></div>
+        <p>Вы можете дать преимущество союзнику которого видите. Если союзник уже имеет преимущество, то к такой проверке прибавляется ваше значение интеллекта.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Хирургеон</h3>
+        <div class="row"><span class="slot">Действие</span><span class="uses"><i></i>1 раз в день</span></div>
+        <p>Вы проводите полевую операцию, пройдите тест интеллекта — 12 и в случае успеха вы возрождаете мертвого союзника с 1 здоровья.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Плоть — слаба! Металл — вечен!</h3>
+        <div class="row"><span class="slot pass">Пассивно</span><span class="uses none">работает всегда</span></div>
+        <p>Вы восстанавливаете d4 здоровья на начало каждого своего раунда.</p>
+        <p>Если вы пали, вы должены пройти тест интеллекта &minus;20 дабы способность сработала!</p>
+        <p>Смерть не повод нарушать присягу!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>Гнев машины</h3></div>
+      <span class="price">5 монет</span>
+    </div>
+    <p>Вы произносите бинарные проклятия и на 1 раунд накладываете помеху на атаки всем противникам с оружием которое не считается обычным. При неудачной атаке держащий такое оружие получает 5 урона.</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Преимущество и помеха</h4><p>Преимущество — два d20, берёшь больший. Помеха — берёшь меньший.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Монеты тратятся на ультимейт.</p></div>
+  </div>
+</section>
+
+
+<!-- ============================ V. ЖРЕЦ ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка V из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Министорум жрец</span>
+      <h1>Жрец<br>императора</h1>
+      <p class="role">Поддержка верой. Лечит, чистит порчу и давит волей. Чем чище команда, тем сильнее молитвы.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">25</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val">+2</span></div>
+      <div><span class="lab">Ловкость</span><span class="val">+0</span></div>
+      <div><span class="lab">Стойкость</span><span class="val">+2</span></div>
+      <div><span class="lab">Интеллект</span><span class="val neg">&minus;2</span></div>
+      <div><span class="lab">Мудрость</span><span class="val neg">&minus;1</span></div>
+      <div><span class="lab">Харизма</span><span class="val">+3</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt empty"></span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Молитвы</h2>
+        <span class="sub">Работают, пока порчи у команды мало. Порча растёт — молитвы гаснут по порядку.</span></span></div>
+
+      <p class="intro">Вы несете в себе свет его! И должны ограждать от порчи паству свою. Каждая молитва дает вам бонус, но с накоплением порчи они становятся не произносимы и не работают, пока свет праведности не вернет вам сил.</p>
+
+      <div class="pick"><h3>Святой лик</h3>
+        <p>Восславьте лик святой! И покуда в команде менее 1 порчи, вы можете прибавить свой параметр харизмы на проверки союзнику которого видите <b>реакцией</b>.</p></div>
+
+      <div class="pick"><h3>Чистая вера</h3>
+        <p>Отриньте ересь! И покуда в команде менее 2 порчи, вы всегда лечите на максимальное значение кубика.</p></div>
+
+      <div class="pick"><h3>Покаяние</h3>
+        <p>Примите покаяние. Покуда в команде менее 3 порчи, всякий раз когда тратится монета вы лечите одного союзника что можете видеть на 1 здоровья. Траты монеты опасностью варпа, или в качестве расплаты за порчу, не учитываются.</p></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Голос императора</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i><i></i>2 раза за бой</span></div>
+        <p>Вы выбираете одно существо в зоне видимости и заставляет его пройти тест интеллекта, сложность 15 или пропустить ход.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Свет праведника</h3>
+        <div class="row"><span class="slot">Действие</span><span class="uses"><i></i><i></i>2 раза за бой</span></div>
+        <p>Вы создаете столб света вокруг себя зоной и все враги обязаны покинуть эту область в свой ход, а союзники восстанавливают 2D6 + Харизма здоровья.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Час молитвы</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i><i></i><i></i>3 раза в день</span></div>
+        <p>Вы молитесь и снижает порчу на 1 в команде.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>Имперское кредо</h3></div>
+      <span class="price">2 монеты</span>
+    </div>
+    <p>Вы автоматически проходите тест харизмы, потратив при этом 2 монеты. Однако такая проверка не может быть направленной на персонажа еретика, ксеноса, мутанта!</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Преимущество и помеха</h4><p>Преимущество — два d20, берёшь больший. Помеха — берёшь меньший.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Следи за порчей: от неё зависят твои молитвы.</p></div>
+  </div>
+</section>
+
+
+<!-- ============================ VI. НЕОФИТ ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка VI из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Неофит астартес</span>
+      <h1>Неофит<br>астартес</h1>
+      <p class="role">Тяжёлый боец ближнего боя. Держит удар, разгоняет строй врагов и пугает силой.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">35</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val">+3</span></div>
+      <div><span class="lab">Ловкость</span><span class="val">+2</span></div>
+      <div><span class="lab">Стойкость</span><span class="val">+1</span></div>
+      <div><span class="lab">Интеллект</span><span class="val neg">&minus;1</span></div>
+      <div><span class="lab">Мудрость</span><span class="val">+0</span></div>
+      <div><span class="lab">Харизма</span><span class="val neg">&minus;2</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt">Панцирный доспех</span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Наследие его</h2>
+        <span class="sub">Выбор делается один раз в начале приключения. Изменить нельзя.</span></span></div>
+
+      <p class="intro">Сделайте выбор основания ордена в начале приключения. Этот выбор нельзя изменить! Помните о своем наследии и предках!</p>
+
+      <div class="pick"><h3>Первое основание</h3>
+        <p>Вы несёте в себе мощь самого примарха. Все ваши атаки ближнего боя совершаются с преимуществом.</p>
+        <span class="price">Выбрав эту черту, остальные станут недоступны</span></div>
+
+      <div class="pick"><h3>Секретное основание</h3>
+        <p>Вы совершаете все проверки Скрытности с преимуществом. Все дальнобойные атаки, совершённые из скрытности, считаются критическими попаданиями в случае если такая атака была успешной.</p>
+        <span class="price">Выбрав эту черту, остальные станут недоступны</span></div>
+
+      <div class="pick"><h3>Проклятое основание</h3>
+        <p>При получении порчи команда всегда получает на 1 очко порчи больше. Если у команды есть очки порчи, вы всегда получает половину урона.</p>
+        <span class="price">Выбрав эту черту, остальные станут недоступны</span></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Ангел смерти</h3>
+        <div class="row"><span class="slot">Действие</span><span class="uses"><i></i><i></i>2 раза за бой</span></div>
+        <p>Пройдите тест силы со Сложностью 15. В случае успеха передвиньтесь вперёд по шаблону, нанеся всем врагам урон вашим оружием ближнего боя.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Аватар гнева его</h3>
+        <div class="row"><span class="slot react">Реакция</span><span class="uses"><i></i><i></i><i></i>3 раза в день</span></div>
+        <p>Вы запугивает с преимуществом и совершает проверку по силе вместо харизмы.</p>
+        <p>В бою если к вам подошел противник в ближний бой, вы можете использовать запугивание, дабы заставить его вместо атаки отойти от вас.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>И не познаю я страха!</h3></div>
+      <span class="price">5 монет</span>
+    </div>
+    <p>Вы наносите удар, или выстрел в ответ на любой удар и выстрел врага! А так же заставляете всех врагов атаковать себя до начала вашего следующего хода!</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Преимущество и помеха</h4><p>Преимущество — два d20, берёшь больший. Помеха — берёшь меньший.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Монеты тратятся на ультимейт.</p></div>
+  </div>
+</section>
+
+
+<!-- ============================ VII. ПСАЙКЕР ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка VII из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Псайкер</span>
+      <h1>Псионик</h1>
+      <p class="role">Самый сильный урон и самый хрупкий в отряде. Провал на психосиле зовёт демона — читай риск ниже.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">20</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val neg">&minus;2</span></div>
+      <div><span class="lab">Ловкость</span><span class="val">+1</span></div>
+      <div><span class="lab">Стойкость</span><span class="val neg">&minus;2</span></div>
+      <div><span class="lab">Интеллект</span><span class="val">+5</span></div>
+      <div><span class="lab">Мудрость</span><span class="val">+1</span></div>
+      <div><span class="lab">Харизма</span><span class="val">+1</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt">Робы</span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Психо-силы</h2>
+        <span class="sub">Не более одной в ход. Сначала тест интеллекта, потом эффект.</span></span></div>
+
+      <div class="pick"><h3>Расплавляющий луч</h3>
+        <p>Вы создаёте поток пламени по шаблону огня. Все цели, попавшие под действие силы, получают <b>2D6 + интеллект</b> урона и теряют <b>2 единицы брони</b> до следующего вашего хода.</p>
+        <span class="test">Тест интеллекта, сложность 15</span></div>
+
+      <div class="pick"><h3>Био-молния</h3>
+        <p>Вы выбираете цель в зоне видимости и наносит <b>4D4</b> урона. Цель атаки должна немедленно пройти тест стойкости (сложность 15) или потеряет возможность передвигаться.</p>
+        <span class="test">Тест интеллекта, сложность 14</span></div>
+
+      <div class="pick"><h3>Телекинетический купол</h3>
+        <p>Вы создаёт купол круглым шаблоном вокруг себя и повышает броню всем союзникам и себе на <b>2</b>. А при критическом применении — на <b>4</b>.</p>
+        <span class="test">Тест интеллекта, сложность 12</span></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Псионическая мощь</h3>
+        <div class="row"><span class="slot">Действие</span><span class="uses none">без ограничений</span></div>
+        <p>Вы обладаете тремя малыми Психо-силами силами. Вы можете использовать любую психосилу но не более одной в ход. Каждый раз когда вы бросаете критеческий провал на броске использования психосилы. Вы обязаны заплатить 3 золотые монеты, или получить урон за куаждую не уплаченную монету! Если вы пали от такого урона, контроль над вами берет демон. И Будет держать вас под контролем 1 ход за каждое очко порчи в команде.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Телепат</h3>
+        <div class="row"><span class="slot">Действие</span><span class="uses"><i></i><i></i>2 раза в день</span></div>
+        <p>Вы можете задать один вопрос любой цели, и она обязана ответить правду. Не действует на демонов и одержимых.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Предвидя всё</h3>
+        <div class="row"><span class="slot react">Реакция</span><span class="uses"><i></i><i></i>2 раза в бой</span></div>
+        <p>Вы или союзник в зоне видимости может перебросить куб D20 по любой причине.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>Кукловод</h3></div>
+      <span class="price">3 монеты</span>
+    </div>
+    <p>Вы выбирает одно существо не демона, и отдает ему один приказ атаки любого другого существа.</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Крит-провал</h4><p>Выпала 1 на психосиле — платишь 3 монеты или получаешь урон.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Порча удлиняет власть демона над тобой.</p></div>
+  </div>
+</section>
+
+
+<!-- ============================ VIII. СЕСТРА ============================ -->
+<section class="card">
+  <div class="runhead"><span>Легенды подземелий</span><span>Карточка VIII из VIII</span></div>
+
+  <div class="head">
+    <div class="titles">
+      <span class="eyebrow">Сестра битвы</span>
+      <h1>Сестра<br>милитант</h1>
+      <p class="role">Командир хора. Один гимн меняет бой для всей команды сразу. Своей смертью приносит отряду монеты.</p>
+    </div>
+    <div class="hpbox"><span class="lab">Здоровье</span><span class="num">20</span></div>
+  </div>
+
+  <div class="numsblock">
+    <div class="cap">Твои числа — прибавляй к броску d20. <b>Красное — минус.</b></div>
+    <div class="nums">
+      <div><span class="lab">Сила</span><span class="val">+1</span></div>
+      <div><span class="lab">Ловкость</span><span class="val">+2</span></div>
+      <div><span class="lab">Стойкость</span><span class="val">+1</span></div>
+      <div><span class="lab">Интеллект</span><span class="val neg">&minus;2</span></div>
+      <div><span class="lab">Мудрость</span><span class="val">+0</span></div>
+      <div><span class="lab">Харизма</span><span class="val">+2</span></div>
+    </div>
+    <div class="gear">
+      <div><span class="lab">Класс брони</span><span class="txt">Силовая броня</span></div>
+      <div><span class="lab">Урон оружия</span><span class="txt empty"></span></div>
+    </div>
+  </div>
+
+  <div class="body2">
+    <div>
+      <div class="snum"><span class="n">1</span><span class="t"><h2>Гимны</h2>
+        <span class="sub">Гимн выбирается в тот момент, когда возглашаешь его способностью из раздела 2.</span></span></div>
+
+      <div class="pick"><h3>Гимн гнева</h3>
+        <p>Союзники персонажа совершают критические попадания при выпадении <b>19 или 20</b> на кубике атаки. Кроме того, их атаки наносят дополнительный урон в размере <b>1к4</b>.</p>
+        <span class="test">До начала следующего хода сестры</span></div>
+
+      <div class="pick"><h3>Гимн стойкости</h3>
+        <p>Противники не могут совершать критические попадания. Кроме того, весь входящий урон, получаемый союзниками, уменьшается на <b>1к4</b>.</p>
+        <span class="test">До начала следующего хода сестры</span></div>
+
+      <div class="pick"><h3>Гимн ужаса</h3>
+        <p>Пройдите проверку Харизмы (СЛ 15). При успехе все враги выходят из ближнего боя со всеми союзниками и отступают на короткую дистанцию. Кроме того, союзники могут совершать атаки по возможности без затраты реакции.</p>
+        <span class="test">До начала следующего хода сестры</span></div>
+    </div>
+
+    <div>
+      <div class="snum"><span class="n">2</span><span class="t"><h2>Способности персонажа</h2>
+        <span class="sub">Плашка говорит, что тратишь. Квадратики зачёркивай, когда потратил.</span></span></div>
+
+      <div class="abil">
+        <h3>Гимны империума</h3>
+        <div class="row"><span class="slot bonus">Бонусное действие</span><span class="uses"><i></i><i></i>2 раза за бой</span></div>
+        <p>Персонаж может возгласить гимн Империума. Выберите один из гимнов и примените его эффект.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Святое наставление</h3>
+        <div class="row"><span class="slot">Действие</span><span class="uses"><i></i><i></i>2 раза в день</span></div>
+        <p>Выберите одного союзника в пределах поля зрения. Он немедленно восстанавливает 1 заряд одной из своих способностей.</p>
+      </div>
+
+      <div class="abil">
+        <h3>Мученица императора</h3>
+        <div class="row"><span class="slot pass">Пассивно</span><span class="uses none">работает всегда</span></div>
+        <p>Каждый раз, когда Сестра Битвы получает 5 единиц урона, команда получает 1 монету. Один раз за игру, если Сестра Битвы пала, команда получает 5 золотых монет.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ult">
+    <div class="top">
+      <div><span class="kick">3 · Ультимейт</span><h3>Щит веры</h3></div>
+      <span class="price">1 монета</span>
+    </div>
+    <p>Персонаж Сестры или любой союзник в поле зрения Сестры может бросить кубик D6 сразу после получения урона: при результате <b>4—5</b> получит половину урона, при <b>6</b> — не получит урона вовсе.</p>
+  </div>
+
+  <div class="cheat">
+    <div><h4>Твой ход</h4><p>Одно действие, одно бонусное действие и перемещение. Порядок любой.</p></div>
+    <div><h4>Как бросать тест</h4><p>d20 плюс модификатор. Результат не меньше СЛ — успех.</p></div>
+    <div><h4>Преимущество и помеха</h4><p>Преимущество — два d20, берёшь больший. Помеха — берёшь меньший.</p></div>
+    <div><h4>Порча и монеты</h4><p>Общие на всю команду. Монеты тратятся на ультимейт.</p></div>
+  </div>
+</section>
+
+</body>
+</html>
