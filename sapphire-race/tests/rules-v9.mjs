@@ -1,0 +1,28 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const nodes=new Map();
+const node=selector=>{if(!nodes.has(selector))nodes.set(selector,{innerHTML:'',textContent:'',value:'',style:{},dataset:{},classList:{toggle(){},add(){},remove(){}},addEventListener(){},querySelector(){return node('child')},showModal(){}});return nodes.get(selector);};
+const storage=new Map();
+const context={console,Math,Date,JSON,Promise,Number,Object,Array,Set,String,Boolean,document:{querySelector:node,querySelectorAll:()=>[],createElement:()=>node('div'),body:{dataset:{}}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},sessionStorage:{getItem:()=>null,setItem(){}},location:{hash:''},history:{replaceState(){}},navigator:{},requestAnimationFrame:f=>f(),setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true};
+context.window=context;context.addEventListener=()=>{};
+let source=fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8');
+source=source.replace('  bindStaticControls();\n  render();\n  registerWebMCP();',`globalThis.test={get state(){return state},set state(v){state=v},set mode(v){viewMode=v},defaultState,STAGES,SUPPORT_CANCELS,ABILITY_CANCELS,TAG_DESCRIPTIONS,selectionCancelledTags,cancelledTags,effectiveStageDc,beginPlayerTurn,resolveSupport,resolveDrive,applyGroundFailure,prepareCollisionChecks,resolveRuleCheck,render,renderChoice,courseManeuver,masterActionOptions,executeMasterAction};`);
+vm.runInNewContext(source,context);const t=context.test;
+function fresh(index=0){t.state=t.defaultState();t.state.started=true;t.state.stageIndex=index;t.state.phase='choice';t.state.selection.arc=t.STAGES[index].arcs[0];return t.state;}
+assert.equal(Object.keys(t.TAG_DESCRIPTIONS).length,24);assert.equal(Object.keys(t.SUPPORT_CANCELS).length,6);assert.equal(Object.keys(t.ABILITY_CANCELS).length,4);
+let state=fresh();state.selection.support='calm';t.beginPlayerTurn();assert.equal(t.effectiveStageDc(),9);assert.equal(t.effectiveStageDc('aegon'),13,'NPC never inherits Kara reductions');t.resolveSupport({raw:1,total:1},14);assert.equal(t.effectiveStageDc(),9,'Confirmed choice cancels even on failed support roll');
+state=fresh(8);state.selection.support='scout';state.selection.ability='speed';state.charges.speed=true;t.beginPlayerTurn();assert.equal(t.cancelledTags().length,2,'Tags count once');assert.equal(t.effectiveStageDc(),12);assert.deepEqual(Array.from(t.STAGES[8].damage),[2,10,3]);
+state=fresh(3);state.selection.support='repair';t.beginPlayerTurn();t.resolveDrive({raw:2,total:2});assert.equal(state.lastControl.gain,-2);
+state=fresh(8);state.selection.support='calm';t.beginPlayerTurn();t.resolveDrive({raw:2,total:2});assert.equal(state.lastControl.gain,-3,'No old -2 clamp');
+state=fresh(6);state.selection.support='scout';t.beginPlayerTurn();t.resolveDrive({raw:2,total:2});assert.equal(state.delayedControl.player.value,-5);assert.equal(state.delayedControl.player.stage,7,'New penalty not erased with current bonuses');
+state=fresh(4);state.selection.support='repair';t.beginPlayerTurn();t.resolveDrive({raw:2,total:2});assert.equal(state.pendingRuleChecks[0].type,'repair');t.resolveRuleCheck({raw:3,total:8});assert.equal(state.skipStages.player,5);state.ruleLastResult=null;state.stageIndex=5;state.phase='choice';state.selection.arc=t.STAGES[5].arcs[0];t.beginPlayerTurn();assert.equal(state.lastControl.skipped,true);assert.equal(state.skipStages.player,undefined);
+state=fresh(1);state.stageSnapshot={standings:[...state.standings]};state.stageFailures=['player','aegon'];t.prepareCollisionChecks();assert.equal(state.pendingRuleChecks.length,1);t.prepareCollisionChecks();assert.equal(state.pendingRuleChecks.length,1,'No duplicate collision checks');t.resolveRuleCheck({raw:10,total:17});assert.equal(state.pendingRuleChecks[0].firstRoll.total,17);t.resolveRuleCheck({raw:15,total:20});assert.equal(state.pendingRuleChecks.length,0);assert.match(state.ruleLastResult.text,/выигрывает/);
+state=fresh(1);state.stageSnapshot={standings:[...state.standings]};state.stageFailures=['player','aegon'];state.cancelledTags={stage:1,tags:['collision']};t.prepareCollisionChecks();assert.equal(state.pendingRuleChecks.length,0,'Canceled collision excludes player');
+state=fresh(7);state.lapControl={lap:0,status:'failure'};state.selection.support='repair';t.beginPlayerTurn();assert.equal(t.effectiveStageDc(),18,'Guillotine sabotage +2');
+state=fresh(7);state.lapControl={lap:0,status:'failure'};state.selection.support='calm';t.beginPlayerTurn();assert.equal(t.effectiveStageDc(),12,'Cancel rhythm suppresses sabotage and removes both tags');
+state=fresh(3);state.selection.support='scout';state.lapControl={lap:0,status:'failure'};t.beginPlayerTurn();t.resolveDrive({raw:18,total:23});assert.equal(state.pendingRuleChecks[0].type,'ejection');t.resolveRuleCheck({raw:2,total:6});assert.equal(state.riderOut.player,true);
+state=fresh(6);state.lapControl={lap:0,status:'failure'};t.renderChoice();assert.equal(state.selection.support,'calm');assert.equal(state.karaPanic,true);
+state=fresh(8);state.distance.aegon=10;t.courseManeuver('aegon',{providedRoll:{raw:2,total:2}});assert.equal(state.distance.aegon,7);assert.equal(state.stageFailures.includes('aegon'),true);
+for(let i=0;i<27;i++){state=fresh(i);t.renderChoice();assert.match(node('#playArea').innerHTML,/Отменяет:/);}
+console.log('PASS: all 24 descriptions / 10 mappings, all 27 stages render, distinct-tag DC, NPC isolation, ground damage and losses, repair/skip, delayed penalty, collision rolls/idempotence, sabotage/panic/ejection.');
