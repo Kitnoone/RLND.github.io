@@ -1,0 +1,5 @@
+2D Spell Effects by Mikodrak / Nyrthos
+Source: https://opengameart.org/content/2d-spell-effects
+Original download: https://opengameart.org/sites/default/files/FX.zip
+License: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+Frames packed into WebP sprite sheets without altering artwork.

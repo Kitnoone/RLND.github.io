@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08131f">
+  <meta name="description" content="Интерактивный движок Сапфировой гонки для D&D">
+  <title>Сапфировая гонка</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2308131f' d='M0 0h64v64H0z'/%3E%3Cpath fill='%2356bfff' d='M32 7 50 22 43 48 32 57 21 48 14 22z'/%3E%3Cpath fill='%23eef7ff' d='m32 15 10 10-4 16-6 7-6-7-4-16z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./scene.css?v=22">
+</head>
+<body>
+  <div class="sky-noise" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-gem" aria-hidden="true"></span>
+      <div>
+        <b>Сапфировая гонка</b>
+        <span id="headerStage">Подготовка экипажа</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="view-switch" aria-label="Режим приложения">
+        <button id="playerModeButton" type="button">Игрок</button>
+        <button id="masterModeButton" type="button">Мастер</button>
+      </div>
+      <button class="ghost-button" id="racersButton" type="button">Гонщики</button>
+      <button class="ghost-button" id="rulesButton" type="button">Правила</button>
+      <button class="ghost-button danger-button" id="resetButton" type="button">Новая гонка</button>
+    </div>
+  </header>
+
+  <div class="arena-scene"><canvas id="arenaCanvas" aria-label="Анимированная арена с девятью парами арок"></canvas></div>
+  <div id="sceneRoster" class="scene-roster" aria-label="Положение экипажей"></div>
+
+  <div class="scene-dock"><div><span class="overline">Девять пар арок · один круг</span><b id="sceneCaption">Сапфировый ипподром</b></div><div id="gateProgress" class="gate-progress"></div><button id="demoRun" class="primary-button">▶ Демопроезд</button><span id="motionStatus" aria-live="polite">Перетащите карту · колесо для масштаба</span><div class="scene-tools"><button id="followCamera">Камера: следовать</button><button id="arenaOverview">Вся арена</button><button id="sceneZoomIn" aria-label="Приблизить">＋</button><button id="sceneZoomOut" aria-label="Отдалить">−</button><button id="panelToggle">Пульт</button><button id="journalToggle">Журнал</button><button id="rosterToggle" aria-expanded="false">Места</button><button id="karaPreviewToggle" title="Проверить анимации без бросков">Анимации Кары</button><button id="soundToggle" aria-pressed="true" title="Звук включится после первого нажатия">Звук: вкл</button></div></div>
+  <div id="effectCaption" class="effect-caption" role="status" aria-live="polite" hidden></div>
+  <main class="app-shell">
+    <section class="race-overview" aria-label="Положение экипажей">
+      <div class="overview-head">
+        <div>
+          <span class="overline" id="lapLabel">До старта</span>
+          <h1 id="stageTitle">Золотая колесница ждёт</h1>
+        </div>
+        <div class="stage-counter"><span id="stageNumber">0</span><small>/ 27</small></div>
+      </div>
+
+      <div class="track" id="raceTrack">
+        <div class="track-lines" aria-hidden="true"></div>
+        <div class="finish-mark" aria-hidden="true"><span>ФИНИШ</span></div>
+        <div class="racers" id="racers"></div>
+      </div>
+    </section>
+
+    <div class="game-grid">
+      <aside class="phase-panel panel" aria-label="Последовательность хода">
+        <div class="panel-head">
+          <span class="overline">Текущий цикл</span>
+          <h2>Порядок этапа</h2>
+        </div>
+        <ol class="phase-list" id="phaseList">
+          <li data-phase="control"><span>1</span><div><b>Управление ареной</b><small>Перед новым заездом</small></div></li>
+          <li data-phase="choice"><span>2</span><div><b>Выбор действий</b><small>Темп, роль, арка</small></div></li>
+          <li data-phase="support"><span>3</span><div><b>Действие экипажа</b><small>Поддержка или атака</small></div></li>
+          <li data-phase="drive"><span>4</span><div><b>Проверка возницы</b><small>Главный бросок</small></div></li>
+          <li data-phase="resolve"><span>5</span><div><b>Последствия</b><small>Позиция и урон</small></div></li>
+          <li data-phase="rivals"><span>6</span><div><b>Ход соперников</b><small>Особые приёмы</small></div></li>
+          <li data-phase="summary"><span>7</span><div><b>Конец этапа</b><small>Переход дальше</small></div></li>
+        </ol>
+      </aside>
+
+      <div class="race-console">
+
+      <section class="play-panel panel" aria-live="polite">
+        <div class="scene-strip">
+          <span id="sceneType">ПОДГОТОВКА</span>
+          <span id="sceneDc"></span>
+        </div>
+        <div id="playArea" class="play-area"></div>
+      </section>
+
+      <details class="kara-details"><summary>Кара · целостность и способности</summary>
+      <aside class="kara-panel panel">
+        <div class="kara-head">
+          <div class="kara-mark" aria-hidden="true">К</div>
+          <div>
+            <span class="overline">Пегасиха</span>
+            <h2>Кара</h2>
+          </div>
+          <div class="bond-meter" title="Пробуждённые аспекты Кары">
+            <i data-bond="speed"></i><i data-bond="flight"></i><i data-bond="light"></i>
+          </div>
+        </div>
+
+        <div class="integrity-block">
+          <div class="metric-row"><span>Целостность</span><b><span id="integrityValue">30</span> / 30</b></div>
+          <div class="meter"><i id="integrityBar"></i></div>
+          <div class="metric-row secondary"><span>Временная защита</span><b id="tempIntegrityValue">0</b></div>
+        </div>
+
+        <div class="ability-list" id="abilityList"></div>
+
+        <div class="arc-status">
+          <span class="overline">Колесница</span>
+          <div id="activeArc" class="empty-state">Активного усиления нет</div>
+        </div>
+      </aside>
+      </details>
+      </div>
+    </div>
+
+    <section class="event-log panel" aria-label="Журнал гонки">
+      <div class="panel-head log-head">
+        <div><span class="overline">Хроника</span><h2>Последние события</h2></div>
+        <button class="ghost-button" id="toggleLogButton" type="button">Развернуть</button>
+      </div>
+      <div id="eventLog" class="log-list"></div>
+    </section>
+  </main>
+
+  <dialog id="rulesDialog" class="rules-dialog">
+    <form method="dialog">
+      <div class="dialog-head"><div><span class="overline">Короткая справка</span><h2>Как проходит гонка</h2></div><button class="icon-button" value="close" aria-label="Закрыть">×</button></div>
+      <ol class="rules-steps">
+        <li>Общий старт: все экипажи начинают с 0 позиций пути, стартового броска и заранее назначенных мест нет. Между соседними арками 10 позиций, на круге 90. Каждый этап даёт всем активным экипажам базовое движение 10; бонусы и штрафы изменяют их личную дистанцию. Пропущенный ход не даёт базового движения.</li>
+        <li>Гонка состоит из трёх заездов: наземного, морского и воздушного. В каждом по девять участков.</li>
+        <li>Перед первым участком каждого заезда команда под ареной проходит испытание навыков и настраивает трассу.</li>
+        <li>В режиме <b>Игрок</b> выберите темп, действие экипажа, один из двух маршрутов к арке и способность Кары. Затем сделайте проверку действия и основной бросок Управления.</li>
+        <li>После успешного Управления Кара становится претендентом на выбранную арку, но ещё не получает её.</li>
+        <li>В режиме <b>Мастер</b> для каждого активного соперника выберите маршрут, направление энергии арки и действие, затем бросьте указанную проверку навыка.</li>
+        <li>Таран разрешён всем: только по ближайшей колеснице впереди, Управление против Управления; ничья остаётся за защищающимся.</li>
+        <li>Обычный проход использует Сл участка; рискованный приём обычно получает Сл +2, а невозможный скачок — Сл +4 и не ниже 20.</li>
+        <li>После последнего хода приложение сравнит итоговый порядок. Экипаж с наибольшей дистанцией на каждом из двух маршрутов получит арку. При равной дистанции сравниваются результаты Управления; если и они равны, единственного победителя нет. Равная дистанция не превращается в искусственный отрыв.</li>
+      </ol>
+      <div class="rules-note"><b>Два экрана:</b> откройте приложение в двух вкладках и оставьте в одной режим «Игрок», а в другой — «Мастер». Они используют одну гонку и синхронизируются автоматически в этом браузере.<br><br><b>Отмена тегов:</b> подтверждённое действие экипажа и заряженная способность Кары отменяют подходящие теги текущего участка. Каждый уникальный отменённый тег снижает Сл Управления на 2, независимо от результата проверки действия. Нажмите на тег, чтобы увидеть описание и способы отмены.<br><br><b>Последствия наземных участков:</b> после провала могут потребоваться дополнительные броски тарана, спасбросок Ловкости Сл 10 или ремонт инструментами кузнеца Сл 15. При неудачном ремонте пропускается следующий ход; «Три створки» дают −5 к следующему Управлению.<br><br><b>Теги трассы:</b> каждый участок явно отмечает повороты, теснины, туман, молнию и другие свойства. Способности срабатывают только там, где их специализация действительно имеет смысл.<br><br><b>Энергия арки:</b> победитель маршрута направляет её либо в колесницу ради общего усиления, либо в гонщика, чтобы зарядить его уникальный приём.</div>
+      <button class="primary-button wide" value="close">Понятно</button>
+    </form>
+  </dialog>
+
+  <dialog id="racersDialog" class="rules-dialog racers-dialog">
+    <form method="dialog">
+      <div class="dialog-head"><div><span class="overline">Листы соперников</span><h2>Гонщики Сапфировой арены</h2></div><button class="icon-button" value="close" aria-label="Закрыть">×</button></div>
+      <p class="dialog-copy">Характеристики определяют бонусы и сложности в ручных ходах мастера. Параметры гонщика и колесницы указаны отдельно, чтобы их можно было применять и во время гонки, и в обычной сцене D&amp;D.</p>
+      <div id="rivalProfiles" class="rival-profiles"></div>
+      <button class="primary-button wide" value="close">Закрыть</button>
+    </form>
+  </dialog>
+
+  <div id="toastRegion" class="toast-region" aria-live="assertive"></div>
+  <aside id="karaPreviews" class="kara-previews" hidden><div><b>Анимации Кары</b><button id="karaPreviewClose" aria-label="Закрыть">×</button></div><label for="karaPreviewSelect">Действие или способность</label><select id="karaPreviewSelect"></select><button id="karaPreviewPlay" class="primary-button">▶ Посмотреть</button><small id="karaPreviewNote">Предпросмотр · броски и ресурсы не меняются</small></aside>
+  <div id="distanceHud" class="distance-hud" aria-live="polite"></div><div id="crowdCaption" class="crowd-caption" hidden></div>
+  <script src="./kara.js?v=22"></script>
+  <script src="./crew-seed.js?v=22"></script>
+  <script src="./crew.js?v=22"></script>
+  <script src="./app.js?v=22"></script>
+  <script src="./audio.js?v=22"></script>
+  <script src="./scene.js?v=22"></script>
+</body>
+</html>
